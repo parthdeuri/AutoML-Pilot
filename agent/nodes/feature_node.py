@@ -3,12 +3,9 @@ from tools.feature_engineering import engineer_features
 
 def feature_node(state: PipelineState) -> dict:
     """
-    Applies encoding and scaling to the cleaned dataset.
+    Applies imputation, encoding and scaling (fitted on the training split only).
     """
-    cleaned_df = state["cleaned_data"]
-    target_col = state["data_profile"]["target_column"]
+    X_train, X_test = engineer_features(state["X_train"], state["X_test"])
     
-    engineered_df = engineer_features(cleaned_df, target_col)
-    
-    # Overwrite cleaned_data with the engineered version for the training node
-    return {"cleaned_data": engineered_df}
+    # Overwrite the splits with the engineered versions for the training node
+    return {"X_train": X_train, "X_test": X_test}

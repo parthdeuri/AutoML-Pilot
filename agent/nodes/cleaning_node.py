@@ -1,15 +1,20 @@
 import pandas as pd
 from agent.state import PipelineState
 from tools.cleaning import clean_data
+from tools.modeling import split_dataset
 
 def cleaning_node(state: PipelineState) -> dict:
     """
-    Executes the JSON cleaning plan on the raw data.
+    Splits the raw data into train/test, then executes the JSON cleaning plan
+    (fill values are learned from the training split only).
     """
     raw_path = state["raw_data_path"]
     plan = state["cleaning_plan"]
+    target_col = state["data_profile"]["target_column"]
+    task_type = state["data_profile"]["inferred_task_type"]
     
     df = pd.read_csv(raw_path, sep=None, engine='python')
-    cleaned_df = clean_data(df, plan)
+    X_train, X_test, y_train, y_test = split_dataset(df, target_col, task_type)
+    X_train, X_test = clean_data(X_train, X_test, plan)
     
-    return {"cleaned_data": cleaned_df}
+    return {"X_train": X_train, "X_test": X_test, "y_train": y_train, "y_test": y_test}

@@ -16,8 +16,17 @@ class PipelineState(TypedDict):
     # JSON-based plan for data cleaning, produced by the Planner LLM
     cleaning_plan: dict[str, Any]
     
-    # Path to the cleaned dataset (or the DataFrame itself) after Cleaner node
-    cleaned_data: Any
+    # Stable name of the dataset (file stem), used to name outputs
+    dataset_name: str
+
+    # Folder where outputs (e.g. SHAP plots) are written; defaults to "outputs"
+    output_dir: str
+
+    # Train/test split (features and target), produced by the Cleaner and then transformed by the Feature node
+    X_train: Any
+    X_test: Any
+    y_train: Any
+    y_test: Any
     
     # Information regarding scaling and categorical encoding
     feature_engineering_info: dict[str, Any]
@@ -31,8 +40,8 @@ class PipelineState(TypedDict):
     # Dictionary of trained model objects
     trained_models: dict[str, Any]
     
-    # Test dataset for SHAP evaluation
-    X_test: Any
+    # Models that failed to train: {model name: error message}
+    model_errors: dict[str, str]
     
     # Path to the generated SHAP feature importance plot (if generated)
     shap_plot_path: str

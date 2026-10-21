@@ -37,7 +37,8 @@ def planner_node(state: PipelineState) -> dict:
     try:
         cleaning_plan = json.loads(content)
     except json.JSONDecodeError:
-        # Fallback empty plan if parsing fails
+        # Fallback empty plan if parsing fails (the feature step still imputes/encodes safely)
+        print("WARNING: Could not parse the cleaning plan from the LLM response; using an empty plan.")
         cleaning_plan = {"actions": []}
         
     return {"cleaning_plan": cleaning_plan}

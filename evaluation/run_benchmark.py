@@ -15,6 +15,7 @@ load_dotenv()
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import argparse
+from pathlib import Path
 import pandas as pd
 from agent.graph import build_graph
 
@@ -53,7 +54,8 @@ def run_benchmark():
         try:
             initial_state = {
                 "raw_data_path": file_path,
-                "target_column": args.target
+                "target_column": args.target,
+                "dataset_name": Path(csv_file).stem
             }
             final_state = app.invoke(initial_state)
             
@@ -61,7 +63,7 @@ def run_benchmark():
             print(f"Best Model: {final_state['best_model_info']['name']} (Score: {final_state['best_model_info']['score']:.4f})")
             
             # Save the report
-            report_path = os.path.join("outputs", "model_cards", f"{csv_file.split('.')[0]}_report.md")
+            report_path = os.path.join("outputs", "model_cards", f"{Path(csv_file).stem}_report.md")
             os.makedirs(os.path.dirname(report_path), exist_ok=True)
             with open(report_path, "w", encoding="utf-8") as f:
                 f.write(final_state["report"])

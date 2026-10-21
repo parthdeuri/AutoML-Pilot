@@ -39,8 +39,10 @@ def profile_dataset(file_path: str, target_column: str) -> dict[str, Any]:
         target_unique = target_series.nunique()
         target_dtype = target_series.dtype
         
-        # If string/object, or numeric with few unique values, it's likely classification
-        if pd.api.types.is_object_dtype(target_dtype) or target_unique <= 20:
+        # If non-numeric (string/object/category), boolean, or few unique values, it's likely classification
+        if (not pd.api.types.is_numeric_dtype(target_dtype)
+                or pd.api.types.is_bool_dtype(target_dtype)
+                or target_unique <= 20):
             task_type = "classification"
     
     stats["inferred_task_type"] = task_type

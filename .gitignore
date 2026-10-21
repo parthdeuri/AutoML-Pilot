@@ -32,3 +32,6 @@ Thumbs.db
 # Test and Dummy Files
 dummy*
 test_*
+
+# Per-session app workspaces (uploads, model cards, SHAP plots)
+workspace/

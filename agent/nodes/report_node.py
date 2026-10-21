@@ -18,6 +18,10 @@ def report_node(state: PipelineState) -> dict:
     Best Model Selected: {json.dumps(state['best_model_info'], indent=2)}
     """
     
+    model_errors = state.get("model_errors")
+    if model_errors:
+        context += f"Models That Failed To Train (mention in the report): {json.dumps(model_errors, indent=2)}"
+    
     messages = [
         ("system", system_prompt),
         ("human", f"Based on the following execution trace, write the final Model Card:\n{context}")
